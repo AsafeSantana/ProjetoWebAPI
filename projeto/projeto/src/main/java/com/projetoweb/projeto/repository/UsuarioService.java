@@ -1,6 +1,9 @@
 package com.projetoweb.projeto.repository;
 
 import java.util.List;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.projetoweb.projeto.model.Usuario;
 
@@ -8,9 +11,11 @@ import com.projetoweb.projeto.model.Usuario;
 public class UsuarioService {
 
     private InterfaceUsu repository;
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioService(InterfaceUsu repository) {
         this.repository = repository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
 
     }
     //GET
@@ -20,11 +25,15 @@ public class UsuarioService {
     }
     //POST
     public Usuario criarUsuario(Usuario usuario) {
+        String encoder = this.passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(encoder);
         Usuario usuarioNovo = repository.save(usuario);
         return usuarioNovo;
     }
     //PUT
     public Usuario editarUsuario(Usuario usuario) {
+        String encoder = this.passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(encoder);
         Usuario usuarioNovo = repository.save(usuario);
         return usuarioNovo;
     }   
@@ -34,4 +43,10 @@ public class UsuarioService {
         repository.deleteById(id);
         return true;
     }
+	public Boolean validarSenha(Usuario usuario) {
+        String senha = repository.getById(usuario.getId()).getSenha();
+        Boolean valid =  passwordEncoder.matches(usuario.getSenha(), senha);
+		return valid;
+	}
+
 }
