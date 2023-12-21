@@ -27,9 +27,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projetoweb.projeto.dto.UsuarioDto;
 import com.projetoweb.projeto.model.Usuario;
 import com.projetoweb.projeto.repository.InterfaceUsu;
 import com.projetoweb.projeto.repository.UsuarioService;
+
+import com.projetoweb.projeto.security.Token;
 
 @RestController
 @CrossOrigin("*")
@@ -65,10 +68,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> validarSenha(@Valid @RequestBody Usuario usuario) {
-        Boolean valid = usuarioService.validarSenha(usuario);
-        if (!valid) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<Token> logar(@Valid @RequestBody UsuarioDto usuario) {
+        Token token = usuarioService.gerarToken(usuario);
+        if (token != null) {
+            return ResponseEntity.ok(token);
         }
         return ResponseEntity.status(200).build();
 

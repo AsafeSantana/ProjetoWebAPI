@@ -14,7 +14,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     public void  configure(HttpSecurity httpSec) throws Exception {
         httpSec.csrf().disable()
         .authorizeHttpRequests()
-        .antMatchers(HttpMethod.GET, "/usuarios").permitAll()
+        .antMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
         .anyRequest().authenticated().and().cors();
 
         httpSec.addFilterBefore(new SecurityFilter(),UsernamePasswordAuthenticationFilter.class);

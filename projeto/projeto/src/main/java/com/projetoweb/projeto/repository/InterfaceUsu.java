@@ -6,5 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.projetoweb.projeto.model.Usuario;
 
 public interface InterfaceUsu extends JpaRepository <Usuario, Integer>{
+
+   public Usuario findByNomeOrEmail(String nome, String email);
     
 }
